@@ -86,4 +86,3 @@ After applying the Terraform configuration, two files will be created in the pro
 
 ## Customization
 You can adjust the key expiration period by specifying the number of days when running the commands. If not specified, the default is set to 2 days.
-```
