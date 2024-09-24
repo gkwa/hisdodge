@@ -46,4 +46,3 @@ destroy-no-confirm:
 plan-apply:
     just plan
     just apply
-
