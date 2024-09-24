@@ -24,11 +24,11 @@ resource "tls_private_key" "ssh_key" {
 }
 
 resource "time_rotating" "key_rotation" {
-  rotation_days = 1
+  rotation_days = var.key_expiration_days
 }
 
 locals {
-  expiration_time = timeadd(time_rotating.key_rotation.rotation_rfc3339, "24h")
+  expiration_time = timeadd(time_rotating.key_rotation.rotation_rfc3339, "${var.key_expiration_days * 24}h")
 }
 
 resource "github_user_ssh_key" "deploy_key" {
@@ -59,3 +59,4 @@ output "private_key_file" {
 output "key_expiration" {
   value = local.expiration_time
 }
+

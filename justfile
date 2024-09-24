@@ -14,9 +14,9 @@ format-just:
     just --unstable --fmt
 
 # Initialize and plan Terraform changes
-plan:
+plan days="2":
     terraform init
-    terraform plan -out=tfplan -var="github_token=$GITHUB_TOKEN" -var="github_user=$GITHUB_USER"
+    terraform plan -out=tfplan -var="github_token=$GITHUB_TOKEN" -var="github_user=$GITHUB_USER" -var="key_expiration_days={{days}}"
 
 # Apply Terraform changes
 apply:
@@ -42,7 +42,16 @@ cleanup:
 destroy-no-confirm:
     terraform destroy -auto-approve -var="github_token=$GITHUB_TOKEN" -var="github_user=$GITHUB_USER"
 
-# Run plan and apply in sequence
-plan-apply:
-    just plan
+# Run plan and apply in sequence with specified days
+plan-apply days="2":
+    just plan {{days}}
     just apply
+
+# Create a new key with specified expiration days
+create-key days="2":
+    just plan-apply {{days}}
+
+# Rotate the existing key with specified expiration days
+rotate-key days="2":
+    just destroy-no-confirm
+    just create-key {{days}}
