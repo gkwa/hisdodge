@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/local"
       version = "~> 2.1"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9.1"
+    }
   }
 }
 
@@ -19,8 +23,16 @@ resource "tls_private_key" "ssh_key" {
   algorithm = "ED25519"
 }
 
+resource "time_rotating" "key_rotation" {
+  rotation_days = 1
+}
+
+locals {
+  expiration_time = timeadd(time_rotating.key_rotation.rotation_rfc3339, "24h")
+}
+
 resource "github_user_ssh_key" "deploy_key" {
-  title = "Terraform-managed SSH key"
+  title = "Terraform-managed SSH key (Expires: ${local.expiration_time})"
   key   = tls_private_key.ssh_key.public_key_openssh
 }
 
@@ -44,3 +56,6 @@ output "private_key_file" {
   value = local_file.private_key.filename
 }
 
+output "key_expiration" {
+  value = local.expiration_time
+}
