@@ -47,3 +47,7 @@ After applying the Terraform configuration, two files will be created in the pro
 - The SSH keys are stored as local files and not in the Terraform state.
 - Ensure that the `id_ed25519` (private key) file is kept secure and not shared.
 - The `destroy-no-confirm` command bypasses safety checks. Use with extreme caution.
+
+## Dependencies
+- [Terraform](https://www.terraform.io/)
+- [Just](https://github.com/casey/just)
